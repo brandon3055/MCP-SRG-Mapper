@@ -22,6 +22,7 @@
 
 // The following is mostly copied from http://www.bennadel.com/blog/1520-binding-events-to-non-dom-objects-with-jquery.htm
 (
+
     function( $ )
     {
         var strLocation = window.location.href;
@@ -67,7 +68,7 @@
         toastr.options.hideMethod = 'slideUp';
         toastr.options.preventDuplicates = true;
 
-        //var DEBUG = false;
+        var DEBUG = true;
 
         var savedVersions = [];
         var controlsAdded = false;
@@ -102,6 +103,28 @@
                 }
             },
 
+            'generctxt': {
+                getControlsTarget: function ()
+                {
+                    return $('body');
+                },
+
+                insertControlsContainer: function (target, container)
+                {
+                    target.prepend(container);
+                },
+
+                getControlsContainer: function ()
+                {
+                    return $(document.createElement("div"));
+                },
+
+                getCodeElements: function ()
+                {
+                    return $('pre');
+                }
+            },
+            
             'gist.github.com': {
                 getControlsTarget: function ()
                 {
@@ -257,16 +280,25 @@
             }
         };
 
-        settings = settings[window.location.hostname];
+        function matchString(str, rule) {
+            return new RegExp("^" + rule.split("*").join(".*") + "$").test(str);
+        }
 
-        //function log()
-        //{
-        //    if (DEBUG)
-        //        if (arguments.length == 1)
-        //            console.log(chrome.runtime.getManifest()['name'] + ': ' + arguments[0]);
-        //        else if (arguments.length > 1)
-        //            console.log(chrome.runtime.getManifest()['name'] + ': ' + arguments[0], arguments.slice(1));
-        //}
+        if (matchString(window.location.href, "*.txt")) {
+            settings = settings['generctxt'];
+        }
+        else {
+            settings = settings[window.location.hostname];    
+        }
+        
+        function log()
+        {
+           if (DEBUG)
+               if (arguments.length == 1)
+                   console.log(chrome.runtime.getManifest()['name'] + ': ' + arguments[0]);
+               else if (arguments.length > 1)
+                   console.log(chrome.runtime.getManifest()['name'] + ': ' + arguments[0], arguments.slice(1));
+        }
 
         function error()
         {
@@ -303,7 +335,7 @@
 
             toastr.success('SRG named elements have been remapped :)');
 
-            //chrome.storage.local.getBytesInUse(null, function(bytesInUse){ log('Local Storage Size: ' + bytesInUse); });
+            chrome.storage.local.getBytesInUse(null, function(bytesInUse){ log('Local Storage Size: ' + bytesInUse); });
         }
 
         function buttonClicked(event)
@@ -361,6 +393,7 @@
 
         function addControls()
         {
+           
             var target = settings.getControlsTarget();
             if (target.size() != 1)
             {
@@ -368,6 +401,7 @@
                 return;
             }
 
+            
             var container = settings.getControlsContainer();
             container.attr('id', 'mcpsrgmapper_input_controls');
 
@@ -455,6 +489,7 @@
 
             var codeLines = settings.getCodeElements();
 
+            //Check if the page contains srg's?
             if (codeLines.size() > 0 && !controlsAdded)
             {
                 codeLines.each(function (index, line)
@@ -467,6 +502,7 @@
                         }
                     }
                 );
+                
             }
             else
                 removeControls();
@@ -501,6 +537,7 @@
                 }
             );
 
+            
         if (settings)
             init();
         else

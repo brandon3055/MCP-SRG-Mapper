@@ -1,8 +1,8 @@
 {
     "name": "MCP SRG Mapper",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "author": "bspkrs, Lunatrius",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "description": "Applies MCP mappings to SRG named code snippets on github repos and paste services.",
     "homepage_url": "https://github.com/bspkrs/MCP-SRG-Mapper",
     "icons": {
@@ -35,7 +35,8 @@
                 "http://pastebin.com/*",
                 "https://paste.ee/p/*",
                 "http://paste.ee/p/*",
-                "http://pastie.org/*"
+                "http://pastie.org/*",
+                "http://*/*.txt"
             ],
             "css": [
                 "css/toastr.min.css",

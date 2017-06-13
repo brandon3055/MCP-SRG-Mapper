@@ -14,6 +14,8 @@
     },
     "default_locale": "en",
     "permissions": [
+        "tabs",
+        "http://*/*", "https://*/*",
         "storage",
         "unlimitedStorage",
         "http://files.minecraftforge.net/maven/de/oceanlabs/mcp/*",
@@ -59,5 +61,8 @@
             "src/background.js"
         ],
         "persistent": false
+    },
+    "browser_action": {
+      "default_popup": "popup.html"
     }
 }
